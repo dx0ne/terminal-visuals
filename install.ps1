@@ -27,14 +27,12 @@ $repo  = $PSScriptRoot
 $files = Join-Path $repo 'files'
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 
-$wtSettings    = Join-Path $env:LOCALAPPDATA 'Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'
 $claudeSettings = Join-Path $env:USERPROFILE '.claude\settings.json'
 
 # Full-file copies: source (under files\) -> destination
 $map = [ordered]@{
     'powershell\Microsoft.PowerShell_profile.ps1' = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\Microsoft.PowerShell_profile.ps1'
     'oh-my-posh\omp.json'                         = Join-Path $env:USERPROFILE 'omp.json'
-    'windows-terminal\settings.json'              = $wtSettings
     'claude-code\statusline.ps1'                  = Join-Path $env:USERPROFILE '.claude\statusline.ps1'
 }
 
@@ -89,4 +87,5 @@ if ($PSCmdlet.ShouldProcess($claudeSettings, 'merge statusLine into settings.jso
 }
 
 Write-Host "`nDone. Restart Windows Terminal and open a new PowerShell tab." -ForegroundColor Cyan
-Write-Host "If glyphs look wrong, set the font face to 'RobotoMono Nerd Font Mono'." -ForegroundColor Cyan
+Write-Host "Windows Terminal is configured by hand (see TERMINAL-SPEC.md §1):" -ForegroundColor Cyan
+Write-Host "  profiles.defaults -> colorScheme: Dimidium, font.face: RobotoMono Nerd Font Mono, cursorShape: filledBox" -ForegroundColor Cyan

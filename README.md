@@ -18,8 +18,6 @@ terminal-visuals/
     │   └── Microsoft.PowerShell_profile.ps1
     ├── oh-my-posh/
     │   └── omp.json
-    ├── windows-terminal/
-    │   └── settings.json
     └── claude-code/
         ├── settings.json
         └── statusline.ps1
@@ -29,9 +27,15 @@ terminal-visuals/
 |---|---|
 | `files/powershell/Microsoft.PowerShell_profile.ps1` | `~\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` |
 | `files/oh-my-posh/omp.json` | `~\omp.json` |
-| `files/windows-terminal/settings.json` | `…\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json` |
-| `files/claude-code/settings.json` | `~\.claude\settings.json` |
+| `files/claude-code/settings.json` | merged into `~\.claude\settings.json` (statusLine only) |
 | `files/claude-code/statusline.ps1` | `~\.claude\statusline.ps1` |
+
+**Windows Terminal is configured by hand** — the few keys that define the look
+(`colorScheme: Dimidium`, `font.face: RobotoMono Nerd Font Mono`, `cursorShape: filledBox`,
+plus the explicit `Dimidium` scheme) are documented in
+[TERMINAL-SPEC.md §1](TERMINAL-SPEC.md#1-windows-terminal). The full machine-specific
+settings file is intentionally **not** shipped, so installing never clobbers a machine's
+own Terminal profiles/keybindings.
 
 ## Install on a new machine
 
@@ -54,18 +58,17 @@ pwsh -File .\install.ps1 -WhatIf    # dry run — show what would change
 Existing files are backed up to `<file>.bak-<timestamp>` before being changed.
 Restart Windows Terminal afterward.
 
-The PowerShell profile, oh-my-posh theme, Windows Terminal settings, and
-`statusline.ps1` are **full-file copies**. The Claude Code `settings.json` is the one
-exception: it's merged **additively** — only the `statusLine` key is written into your
-existing `~/.claude/settings.json`, leaving any permissions, plugins, and other keys on
-that machine untouched.
+The PowerShell profile, oh-my-posh theme, and `statusline.ps1` are **full-file copies**.
+The Claude Code `settings.json` is the one exception: it's merged **additively** — only
+the `statusLine` key is written into your existing `~/.claude/settings.json`, leaving any
+permissions, plugins, and other keys on that machine untouched.
 
-## ⚠️ Notes before pushing public
+## Notes
 
 - **`files/claude-code/settings.json` contains only the `statusLine` key** (path uses
   `~`, not an absolute `C:/Users/greg/...`). It is *not* a full settings file — the
   installer merges this key into whatever `~/.claude/settings.json` already exists, so
   no permissions or plugins are shipped or clobbered.
-- **`files/windows-terminal/settings.json`** references the `Dimidium` color scheme by
-  name without defining it (it resolves as a Terminal built-in). See TERMINAL-SPEC.md
-  §1 for an explicit scheme block you can paste in if a machine lacks it.
+- **Windows Terminal settings are not shipped.** The `Dimidium` scheme resolves as a
+  Terminal built-in; if a machine lacks it, paste the explicit scheme block from
+  TERMINAL-SPEC.md §1 into the `schemes` array. Set the three appearance keys by hand.
