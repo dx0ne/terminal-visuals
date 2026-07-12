@@ -5,7 +5,8 @@ can be reproduced or version-controlled.
 
 - **OS:** Windows 11 Pro 10.0.26200
 - **Captured:** 2026-06-18 (updated 2026-07-12: color scheme Dimidium → Retrowave;
-  yellow foreground + cursor color baked into scheme, font size 10, `intenseTextStyle: bright`)
+  yellow foreground + cursor color baked into scheme, font size 10, `intenseTextStyle: bright`;
+  oh-my-posh theme rewritten to mirror the Claude Code statusline)
 - **Shell:** PowerShell 7.6.2 (PowerShell Core / `pwsh`)
 - **Terminal:** Windows Terminal 1.21.10351.0
 
@@ -114,45 +115,36 @@ function cc { claude $args }
 
 ### oh-my-posh theme — `~/omp.json`
 
-Schema v4. A "diamond + powerline" prompt.
+Schema v4. A flat, transparent-background prompt that **mirrors the Claude Code
+statusline** (§3) — same glyphs, same standard ANSI colors, so both render
+identically under the Retrowave scheme:
 
-**Palette**
+```
+ <dir>   <branch> +<staged> ~<unstaged> ?<untracked> ❯
+```
 
-| Name | Hex |
-|---|---|
-| black | `#262B44` |
-| blue | `#4B95E9` |
-| green | `#59C9A5` |
-| orange | `#F07623` |
-| white | `#E0DEF4` |
-| yellow | `#F3AE35` |
-| red | `#D81E5B` |
+No palette — all colors are named ANSI colors (`cyan`, `lightBlue`, …), which emit
+the same SGR codes the statusline uses and inherit the Windows Terminal scheme.
 
-**Left prompt blocks (in order)**
+**Left prompt segments (all `style: plain`, background transparent)**
 
-1. **path** (diamond, `style: folder`) — white on **orange**, leading icon ``.
-2. **git** (powerline) — black on **green** by default, with background overrides:
-   - changed (working/staging) → **yellow** (text black)
-   - ahead **and** behind → **red** (text white)
-   - ahead only → `#49416D` (text white)
-   - behind only → `#7A306C`
-   - Shows upstream icon, branch (truncated 25), branch status, working/staging counts.
-3. **root** (powerline) — white on **yellow**, shown only when elevated.
-4. **status** (diamond) — exit-status glyph; white on **blue**, turns **red** on non-zero exit.
-
-**Right prompt (rprompt)**
-
-- **python** segment (yellow, `display_mode: files`) — venv indicator.
-- **time** segment — `at HH:MM:SS` (time in blue/bold, "at" in white).
+| Segment | Glyph | Color | SGR |
+|---|---|---|---|
+| **path** (`style: folder` — cwd leaf) |  | cyan | 36 |
+| **git** branch (`.HEAD`, branch truncated 25) |  | lightBlue | 94 |
+| — staged count (`+n` = Staging Added+Deleted+Modified+Unmerged) |  | green | 32 |
+| — unstaged count (`~n` = Working Modified+Deleted+Unmerged) |  | yellow | 33 |
+| — untracked count (`?n` = Working.Untracked) |  | magenta | 35 |
+| **root** — only when elevated |  | yellow | 33 |
+| **status** — prompt char, always shown | ❯ | green; **red** on non-zero exit | 32 / 31 |
 
 **Other**
 
-- `transient_prompt` and `secondary_prompt`: minimal yellow `` chevron form.
+- No right prompt (the statusline's token counter has no terminal analog).
+- `transient_prompt`: cyan ` <folder>` + blue `❯`; `secondary_prompt`: blue `❯❯`.
 - `console_title_template`: `"{{ .Shell }} in {{ .Folder }}"`.
 - `final_space: true`.
 - oh-my-posh auto-upgrade: disabled (`upgrade.auto: false`, no notice).
-- `_tui.disabled` holds segments toggled off in the configure UI (session/username,
-  node, go, shell name, AWS & Azure tooltips) — present but inactive.
 
 ---
 
@@ -172,7 +164,7 @@ Schema v4. A "diamond + powerline" prompt.
 Reads the Claude Code status JSON from stdin and emits one ANSI-colored line:
 
 ```
- <dir>   <branch> +<staged> ~<unstaged> ?<untracked>   <usedK>k/<totalK>k
+ <dir>   <branch> +<staged> ~<unstaged> ?<untracked> <MODEL>  <usedK>k/<totalK>k
 ```
 
 **Segments & colors (ANSI SGR codes)**
@@ -184,19 +176,22 @@ Reads the Claude Code status JSON from stdin and emits one ANSI-colored line:
 | Staged (`+n`) |  | Green | 32 |
 | Unstaged (`~n`) |  | Yellow | 33 |
 | Untracked (`?n`) |  | Magenta | 35 |
-| Token counter (<70%) |  | Fixed gray (palette-independent) | 38;5;245 |
-| Token counter (70–90%) |  | Yellow | 33 |
-| Token counter (>90%) |  | Red | 31 |
+| Model shorthand (`Sonnet 5` → `S5`, `Opus 4.8` → `O4.8`) | — | Fixed gray (palette-independent) | 38;5;245 |
+| Token counter (< 100k) |  | Fixed gray (palette-independent) | 38;5;245 |
+| Token counter (100–150k) |  | Yellow | 33 |
+| Token counter (> 150k) |  | Red | 31 |
 
 **Behavior**
 
 - Directory = leaf of `workspace.current_dir` (falls back to `cwd`).
 - Git section only when cwd is inside a repo; counts via `git diff --cached`,
   `git diff`, and `git ls-files --others --exclude-standard`.
+- Model shorthand from `model.display_name`: first letter of each alphabetic word
+  (uppercased) + numeric tokens kept verbatim, joined without spaces.
 - Token budget: `totalK` = **1000** when the model id contains `[1m]`/`1m`,
-  otherwise **200**.
-- Used % preference order: `context_window.used_percentage` →
-  `tokens / context_window_size` → `tokens / (totalK*1000)`.
+  otherwise **200** (display only — does not affect the counter color).
+- Counter color uses **absolute** used-token thresholds (not % of window):
+  gray < 100k, yellow 100–150k, red > 150k.
   Tokens summed from the last usage entry in the tail (80 lines) of the transcript:
   `input + cache_read + cache_creation`.
 - Output forced to UTF-8 for correct glyph rendering.

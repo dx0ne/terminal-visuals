@@ -2,7 +2,10 @@
 
 My terminal look on Windows — PowerShell + oh-my-posh prompt, Windows Terminal
 (Retrowave / RobotoMono Nerd Font), and a custom Claude Code statusline — tracked so I
-can push it to GitHub and reinstall on any machine.
+can push it to GitHub and reinstall on any machine. The oh-my-posh prompt deliberately
+mirrors the Claude Code statusline (same glyphs and ANSI colors:
+` dir   branch +staged ~unstaged ?untracked ❯`), so the shell prompt and Claude's
+statusline look like one system.
 
 See **[TERMINAL-SPEC.md](TERMINAL-SPEC.md)** for a full description of every setting.
 

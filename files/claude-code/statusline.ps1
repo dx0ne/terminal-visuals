@@ -12,10 +12,11 @@ $clrBranch   = 94   # Bright blue   — git branch glyph + name
 $clrStaged   = 32   # Green         — staged changes (+)
 $clrUnstaged = 33   # Yellow        — unstaged changes (~)
 $clrUntrack  = 35   # Magenta       — untracked files (?)
-$clrTokensLow  = '38;5;245'   # Fixed 256-color gray — token counter < 70%
+$clrModel      = '38;5;245'   # Fixed 256-color gray — model shorthand
+$clrTokensLow  = '38;5;245'   # Fixed 256-color gray — token counter < 100k
                               # (not SGR 90/brightBlack: Retrowave remaps that to pink)
-$clrTokensMid  = 33   # Yellow        — token counter 70–90%
-$clrTokensHigh = 31   # Red           — token counter > 90%
+$clrTokensMid  = 33   # Yellow        — token counter 100–150k
+$clrTokensHigh = 31   # Red           — token counter > 150k
 
 $raw = [Console]::In.ReadToEnd()
 if (-not $raw) { return }
@@ -47,6 +48,16 @@ if ($cwd -and (Test-Path $cwd)) {
     }
 }
 
+# Model shorthand: "Sonnet 5" -> S5, "Opus 4.8" -> O4.8, "Fable 5" -> F5
+$modelPart = ''
+$modelName = $ctx.model.display_name
+if ($modelName) {
+    $short = (($modelName -split '\s+') | Where-Object { $_ -match '^[A-Za-z0-9]' } | ForEach-Object {
+        if ($_ -match '^[A-Za-z]') { $_.Substring(0, 1).ToUpper() } else { $_ }
+    }) -join ''
+    if ($short) { $modelPart = " " + (ansi $clrModel $short) }
+}
+
 # Context tokens from transcript
 $ctxPart = ''
 $transcript = $ctx.transcript_path
@@ -66,21 +77,10 @@ if ($transcript -and (Test-Path $transcript)) {
                 $tokens = $inp + $cread + $ccrt
                 if ($tokens -gt 0) {
                     $usedK = [math]::Round($tokens / 1000)
-                    $maxTokens = $totalK * 1000
 
-                    # Prefer the pre-calculated used_percentage from JSON input if present
-                    $pct = $null
-                    if ($ctx.context_window -and $ctx.context_window.used_percentage -ne $null) {
-                        $pct = [double]$ctx.context_window.used_percentage
-                    } elseif ($ctx.context_window -and $ctx.context_window.context_window_size -gt 0) {
-                        $cwSize = [double]$ctx.context_window.context_window_size
-                        $pct = ($tokens / $cwSize) * 100
-                    } else {
-                        $pct = ($tokens / $maxTokens) * 100
-                    }
-
-                    $clrTokens = if ($pct -ge 90) { $clrTokensHigh }
-                                 elseif ($pct -ge 70) { $clrTokensMid }
+                    # Absolute thresholds: gray < 100k, yellow 100-150k, red > 150k
+                    $clrTokens = if ($usedK -gt 150) { $clrTokensHigh }
+                                 elseif ($usedK -ge 100) { $clrTokensMid }
                                  else { $clrTokensLow }
 
                     $ctxPart = " " + (ansi $clrTokens "$([char]0xf080) ${usedK}k/${totalK}k")
@@ -91,4 +91,4 @@ if ($transcript -and (Test-Path $transcript)) {
     }
 }
 
-"$dirPart$gitPart$ctxPart"
+"$dirPart$gitPart$modelPart$ctxPart"
