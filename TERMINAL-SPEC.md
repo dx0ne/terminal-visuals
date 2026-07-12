@@ -4,7 +4,8 @@ A complete dump of the terminal appearance/statusline setup on this machine, so 
 can be reproduced or version-controlled.
 
 - **OS:** Windows 11 Pro 10.0.26200
-- **Captured:** 2026-06-18 (updated 2026-07-12: color scheme Dimidium → Retrowave)
+- **Captured:** 2026-06-18 (updated 2026-07-12: color scheme Dimidium → Retrowave;
+  yellow foreground + cursor color baked into scheme, font size 10, `intenseTextStyle: bright`)
 - **Shell:** PowerShell 7.6.2 (PowerShell Core / `pwsh`)
 - **Terminal:** Windows Terminal 1.21.10351.0
 
@@ -22,7 +23,7 @@ can be reproduced or version-controlled.
 | `defaultProfile` | `{574e775e-4f2a-5b96-ac1e-a2962a402336}` (PowerShell Core) |
 | `disableAnimations` | `true` |
 | `compatibility.enableUnfocusedAcrylic` | `false` |
-| `copyOnSelect` | `false` |
+| `copyOnSelect` | `true` |
 | `copyFormatting` | `none` |
 
 ### Default profile appearance (`profiles.defaults`)
@@ -32,6 +33,13 @@ can be reproduced or version-controlled.
 | `colorScheme` | **Retrowave** |
 | `cursorShape` | `filledBox` |
 | `font.face` | **RobotoMono Nerd Font Mono** |
+| `font.size` | `10` |
+| `intenseTextStyle` | `bright` |
+
+> On this machine the yellow text (`foreground: #FFD866`) and cursor color
+> (`cursorColor: #4B95E9`) are set as `profiles.defaults` overrides, but they are
+> baked into the shipped `retrowave.json` scheme — a new machine only needs the
+> five keys above plus the scheme.
 
 > The Nerd Font face is required — both the oh-my-posh prompt and the Claude Code
 > statusline use Nerd Font / Powerline glyphs (, , , , …).
@@ -64,23 +72,25 @@ array on a new machine.
 {
     "name": "Retrowave",
     "background": "#070825",
-    "foreground": "#46BDFF",
+    "foreground": "#FFD866",
+    "cursorColor": "#4B95E9",
+    "selectionBackground": "#FFFFFF",
     "black":        "#181A1F",
     "red":          "#FF16B0",
     "green":        "#929292",
-    "yellow":       "#fcee54",
+    "yellow":       "#FCEE54",
     "blue":         "#46BDFF",
     "purple":       "#FF92DF",
-    "cyan":         "#df81fc",
+    "cyan":         "#DF81FC",
     "white":        "#FFFFFF",
     "brightBlack":  "#FF16B0",
-    "brightRed":    "#f85353",
-    "brightGreen":  "#fcee54",
-    "brightYellow": "#ffffff",
+    "brightRed":    "#F85353",
+    "brightGreen":  "#FCEE54",
+    "brightYellow": "#FFFFFF",
     "brightBlue":   "#46BDFF",
     "brightPurple": "#FF92DF",
-    "brightCyan":   "#ff901f",
-    "brightWhite":  "#ffffff"
+    "brightCyan":   "#FF901F",
+    "brightWhite":  "#FFFFFF"
 }
 ```
 
@@ -202,9 +212,9 @@ To recreate this look on a fresh machine:
 3. Copy `omp.json` → `~/omp.json`.
 4. Create the PowerShell profile with the two lines in §2.
 5. Set Windows Terminal `profiles.defaults`: `colorScheme: Retrowave`,
-   `font.face: RobotoMono Nerd Font Mono`, `cursorShape: filledBox`. Paste the
-   Retrowave scheme (§1, tracked as `files/windows-terminal/retrowave.json`) into
-   the `schemes` array.
+   `font.face: RobotoMono Nerd Font Mono`, `font.size: 10`, `cursorShape: filledBox`,
+   `intenseTextStyle: bright`. Paste the Retrowave scheme (§1, tracked as
+   `files/windows-terminal/retrowave.json`) into the `schemes` array.
 6. Copy `statusline.ps1` → `~/.claude/statusline.ps1` and add the `statusLine` block
    to `~/.claude/settings.json`.
 

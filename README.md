@@ -33,7 +33,8 @@ terminal-visuals/
 | `files/claude-code/statusline.ps1` | `~\.claude\statusline.ps1` |
 
 **Windows Terminal is configured by hand** — the few keys that define the look
-(`colorScheme: Retrowave`, `font.face: RobotoMono Nerd Font Mono`, `cursorShape: filledBox`)
+(`colorScheme: Retrowave`, `font.face: RobotoMono Nerd Font Mono`, `font.size: 10`,
+`cursorShape: filledBox`, `intenseTextStyle: bright`)
 are documented in [TERMINAL-SPEC.md §1](TERMINAL-SPEC.md#1-windows-terminal), and the
 `Retrowave` scheme itself ships as `files/windows-terminal/retrowave.json` — paste it into
 the `schemes` array. The full machine-specific settings file is intentionally **not**
@@ -73,4 +74,6 @@ permissions, plugins, and other keys on that machine untouched.
   no permissions or plugins are shipped or clobbered.
 - **Windows Terminal settings are not shipped.** The `Retrowave` scheme is **not** a
   Terminal built-in — paste `files/windows-terminal/retrowave.json` into the `schemes`
-  array (same block as TERMINAL-SPEC.md §1). Set the three appearance keys by hand.
+  array (same block as TERMINAL-SPEC.md §1). Set the five appearance keys by hand.
+  The scheme now carries the yellow foreground (`#FFD866`) and cursor color (`#4B95E9`)
+  itself, so no per-profile color overrides are needed on a new machine.
