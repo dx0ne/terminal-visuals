@@ -88,4 +88,5 @@ if ($PSCmdlet.ShouldProcess($claudeSettings, 'merge statusLine into settings.jso
 
 Write-Host "`nDone. Restart Windows Terminal and open a new PowerShell tab." -ForegroundColor Cyan
 Write-Host "Windows Terminal is configured by hand (see TERMINAL-SPEC.md §1):" -ForegroundColor Cyan
-Write-Host "  profiles.defaults -> colorScheme: Dimidium, font.face: RobotoMono Nerd Font Mono, cursorShape: filledBox" -ForegroundColor Cyan
+Write-Host "  profiles.defaults -> colorScheme: Retrowave, font.face: RobotoMono Nerd Font Mono, cursorShape: filledBox" -ForegroundColor Cyan
+Write-Host "  and paste files\windows-terminal\retrowave.json into the schemes array" -ForegroundColor Cyan

@@ -4,7 +4,7 @@ A complete dump of the terminal appearance/statusline setup on this machine, so 
 can be reproduced or version-controlled.
 
 - **OS:** Windows 11 Pro 10.0.26200
-- **Captured:** 2026-06-18
+- **Captured:** 2026-06-18 (updated 2026-07-12: color scheme Dimidium → Retrowave)
 - **Shell:** PowerShell 7.6.2 (PowerShell Core / `pwsh`)
 - **Terminal:** Windows Terminal 1.21.10351.0
 
@@ -29,7 +29,7 @@ can be reproduced or version-controlled.
 
 | Setting | Value |
 |---|---|
-| `colorScheme` | **Dimidium** |
+| `colorScheme` | **Retrowave** |
 | `cursorShape` | `filledBox` |
 | `font.face` | **RobotoMono Nerd Font Mono** |
 
@@ -53,40 +53,34 @@ can be reproduced or version-controlled.
 - Several Visual Studio Developer prompts (2022 / 18)
 - Hidden: Windows PowerShell (v1.0), Azure Cloud Shell
 
-### Color scheme: "Dimidium"
+### Color scheme: "Retrowave"
 
-The `schemes` array in `settings.json` is **empty**, and "Dimidium" is **not** present
-in this Terminal build's bundled `defaults.json`. Windows Terminal is resolving it as a
-built-in/community scheme at runtime. If you ever move machines, paste this explicit
-definition into the `schemes` array so it travels with the config.
-
-> ⚠️ The hex values below are the canonical published **Dimidium** palette
-> (iTerm2-Color-Schemes / terminal.sexy), **not** extracted from this machine — verify
-> against your live colors if exactness matters.
+A custom neon-on-dark-navy scheme, **not** a Terminal built-in. It lives explicitly in
+the `schemes` array of `settings.json` on this machine, and is tracked in this repo as
+`files/windows-terminal/retrowave.json` — paste that file's contents into the `schemes`
+array on a new machine.
 
 ```json
 {
-    "name": "Dimidium",
-    "background": "#1C1D1F",
-    "foreground": "#FFFFFF",
-    "cursorColor": "#BBBBBB",
-    "selectionBackground": "#4D4D4D",
-    "black":        "#000000",
-    "red":          "#CF494C",
-    "green":        "#60B442",
-    "yellow":       "#C5A332",
-    "blue":         "#0477A4",
-    "purple":       "#AA559B",
-    "cyan":         "#3FB7BE",
-    "white":        "#E0E0E0",
-    "brightBlack":  "#808080",
-    "brightRed":    "#FF2E2E",
-    "brightGreen":  "#7CD45F",
-    "brightYellow": "#F4C932",
-    "brightBlue":   "#28A8E2",
-    "brightPurple": "#D062BF",
-    "brightCyan":   "#52C6DC",
-    "brightWhite":  "#FFFFFF"
+    "name": "Retrowave",
+    "background": "#070825",
+    "foreground": "#46BDFF",
+    "black":        "#181A1F",
+    "red":          "#FF16B0",
+    "green":        "#929292",
+    "yellow":       "#fcee54",
+    "blue":         "#46BDFF",
+    "purple":       "#FF92DF",
+    "cyan":         "#df81fc",
+    "white":        "#FFFFFF",
+    "brightBlack":  "#FF16B0",
+    "brightRed":    "#f85353",
+    "brightGreen":  "#fcee54",
+    "brightYellow": "#ffffff",
+    "brightBlue":   "#46BDFF",
+    "brightPurple": "#FF92DF",
+    "brightCyan":   "#ff901f",
+    "brightWhite":  "#ffffff"
 }
 ```
 
@@ -207,9 +201,10 @@ To recreate this look on a fresh machine:
 2. Install **oh-my-posh** (`winget install JanDeDobbeleer.OhMyPosh`).
 3. Copy `omp.json` → `~/omp.json`.
 4. Create the PowerShell profile with the two lines in §2.
-5. Set Windows Terminal `profiles.defaults`: `colorScheme: Dimidium`,
-   `font.face: RobotoMono Nerd Font Mono`, `cursorShape: filledBox`. Add the explicit
-   Dimidium scheme (§1) to the `schemes` array so it is self-contained.
+5. Set Windows Terminal `profiles.defaults`: `colorScheme: Retrowave`,
+   `font.face: RobotoMono Nerd Font Mono`, `cursorShape: filledBox`. Paste the
+   Retrowave scheme (§1, tracked as `files/windows-terminal/retrowave.json`) into
+   the `schemes` array.
 6. Copy `statusline.ps1` → `~/.claude/statusline.ps1` and add the `statusLine` block
    to `~/.claude/settings.json`.
 
