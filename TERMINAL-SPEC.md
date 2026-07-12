@@ -178,7 +178,7 @@ Reads the Claude Code status JSON from stdin and emits one ANSI-colored line:
 | Untracked (`?n`) |  | Magenta | 35 |
 | Model shorthand (`Sonnet 5` → `S5`, `Opus 4.8` → `O4.8`) | — | Fixed gray (palette-independent) | 38;5;245 |
 | Token counter (< 100k) |  | Fixed gray (palette-independent) | 38;5;245 |
-| Token counter (100–150k) |  | Yellow | 33 |
+| Token counter (100–150k) |  | Fixed orange (palette-independent) | 38;5;208 |
 | Token counter (> 150k) |  | Red | 31 |
 
 **Behavior**
@@ -191,7 +191,7 @@ Reads the Claude Code status JSON from stdin and emits one ANSI-colored line:
 - Token budget: `totalK` = **1000** when the model id contains `[1m]`/`1m`,
   otherwise **200** (display only — does not affect the counter color).
 - Counter color uses **absolute** used-token thresholds (not % of window):
-  gray < 100k, yellow 100–150k, red > 150k.
+  gray < 100k, orange 100–150k, red > 150k.
   Tokens summed from the last usage entry in the tail (80 lines) of the transcript:
   `input + cache_read + cache_creation`.
 - Output forced to UTF-8 for correct glyph rendering.

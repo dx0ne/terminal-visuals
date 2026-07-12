@@ -15,7 +15,7 @@ $clrUntrack  = 35   # Magenta       — untracked files (?)
 $clrModel      = '38;5;245'   # Fixed 256-color gray — model shorthand
 $clrTokensLow  = '38;5;245'   # Fixed 256-color gray — token counter < 100k
                               # (not SGR 90/brightBlack: Retrowave remaps that to pink)
-$clrTokensMid  = 33   # Yellow        — token counter 100–150k
+$clrTokensMid  = '38;5;208'   # Fixed 256-color orange — token counter 100–150k
 $clrTokensHigh = 31   # Red           — token counter > 150k
 
 $raw = [Console]::In.ReadToEnd()
