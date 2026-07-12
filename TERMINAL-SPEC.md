@@ -174,7 +174,7 @@ Reads the Claude Code status JSON from stdin and emits one ANSI-colored line:
 | Staged (`+n`) |  | Green | 32 |
 | Unstaged (`~n`) |  | Yellow | 33 |
 | Untracked (`?n`) |  | Magenta | 35 |
-| Token counter (<70%) |  | Dark gray | 90 |
+| Token counter (<70%) |  | Fixed gray (palette-independent) | 38;5;245 |
 | Token counter (70–90%) |  | Yellow | 33 |
 | Token counter (>90%) |  | Red | 31 |
 

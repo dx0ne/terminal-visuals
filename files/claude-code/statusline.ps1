@@ -4,7 +4,7 @@ $ErrorActionPreference = 'SilentlyContinue'
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
 # ANSI color helpers
-function ansi([int]$code, [string]$text) { "$([char]27)[${code}m${text}$([char]27)[0m" }
+function ansi([string]$code, [string]$text) { "$([char]27)[${code}m${text}$([char]27)[0m" }
 
 # Color palette (standard ANSI SGR codes, compatible with Windows Terminal)
 $clrDir      = 36   # Cyan          — directory
@@ -12,7 +12,8 @@ $clrBranch   = 94   # Bright blue   — git branch glyph + name
 $clrStaged   = 32   # Green         — staged changes (+)
 $clrUnstaged = 33   # Yellow        — unstaged changes (~)
 $clrUntrack  = 35   # Magenta       — untracked files (?)
-$clrTokensLow  = 90   # Dark gray     — token counter < 70%
+$clrTokensLow  = '38;5;245'   # Fixed 256-color gray — token counter < 70%
+                              # (not SGR 90/brightBlack: Retrowave remaps that to pink)
 $clrTokensMid  = 33   # Yellow        — token counter 70–90%
 $clrTokensHigh = 31   # Red           — token counter > 90%
 
